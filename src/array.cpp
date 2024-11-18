@@ -1,11 +1,23 @@
 #include "../include/arr.h"
 
-Array::Array() : size(0), razmer(10) {
-    arr = new string[razmer];
+Array::Array() : size(0), capacity(10) {
+    arr = new string[capacity];
 }
+
 Array::~Array() {
-    delete[] arr; //Освобождение места
+    delete[] arr; // Освобождение места
 }
+
+void Array::resize() {
+    capacity *= 2; // Увеличиваем емкость в 2 раза
+    string* newArr = new string[capacity];
+    for (size_t i = 0; i < size; ++i) {
+        newArr[i] = arr[i];
+    }
+    delete[] arr;
+    arr = newArr;
+}
+
 void Array::ShowArray() const {
     for (size_t i = 0; i < size; ++i) {
         cout << arr[i] << " ";
@@ -14,30 +26,23 @@ void Array::ShowArray() const {
 }
 
 void Array::addToEnd(string value) {
-    string *newArr = new string[size + 1]; //Добавление нового массива, который увеличен на 1
-    for (size_t i = 0; i < size; ++i)
-    {
-        newArr[i] = arr[i];
+    if (size == capacity) {
+        resize(); // Увеличение емкости, если массив переполнен
     }
-    delete[] arr;
-    arr = newArr;
-    arr[size++] = value;//Увеличение длины массива   
+    arr[size++] = value; // Увеличение длины массива   
 }
 
 void Array::addAtIndex(size_t index, string value) {
     if (index > size) return;
-    string *newArr = new string[size + 1];
-    for (size_t i = 0; i < index; ++i) {
-        newArr[i] = arr[i];
+    if (size == capacity) {
+        resize(); // Увеличение емкости
     }
-    newArr[index] = value;
-    for (size_t i = index; i < size; ++i) {
-        newArr[i + 1] = arr[i];
+    for (size_t i = size; i > index; --i) {
+        arr[i] = arr[i - 1];
     }
-    delete[] arr;
-    arr = newArr;
+    arr[index] = value;
     size++;
-    }
+}
 
 string Array::getIndex(size_t index) {
     if (index >= size) {
@@ -45,24 +50,27 @@ string Array::getIndex(size_t index) {
     }
     return arr[index];
 }
-    
+
 void Array::removeAtIndex(size_t index) {
     if (index >= size) return;
-    string *newArr = new string[size - 1];
-    for(size_t i = 0; i < index; ++i) {
-            newArr[i] = arr[i];
+    for (size_t i = index; i < size - 1; ++i) {
+        arr[i] = arr[i + 1];
     }
-    for(size_t i = index + 1; i < size; ++i) {
-        newArr[i - 1] = arr[i];
-    }
-    delete[] arr;
-    arr = newArr;
     size--;
 }
 
 void Array::replaceAtIndex(size_t index, string value) {
-    if(index >= size) return;
-    arr[index] = value; //Замена элемента
+    if (index >= size) return;
+    arr[index] = value; // Замена элемента
+}
+
+bool Array::find(const string& value) const {
+    for (size_t i = 0; i < size; ++i) {
+        if (arr[i] == value) {
+            return true; // Элемент найден
+        }
+    }
+    return false; // Элемент не найден
 }
 
 size_t Array::getSize() const {

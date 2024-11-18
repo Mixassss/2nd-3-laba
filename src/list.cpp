@@ -101,14 +101,18 @@ bool SinglyLinkedList::find(string value) {
     return false;
 }
 
-void SinglyLinkedList::clearSList() {
-    while (!isEmpty()) {
-        popFront();
-    }
+size_t SinglyLinkedList::getSize() const {
+    return elementCount;
 }
 
 Node* SinglyLinkedList::getHead() const {
     return head;
+}
+
+void SinglyLinkedList::clearSList() {
+    while (!isEmpty()) {
+        popFront();
+    }
 }
 
 DoubleNode::DoubleNode(string value){ 

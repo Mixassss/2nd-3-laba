@@ -59,6 +59,15 @@ bool Hash_table::get(const string& key, string& value) {
     return false; //Ключ не найден
 }
 
+int Hash_table::size() const {
+    return sizetable; // Вернуть значение sizetable
+}
+
+HNode* Hash_table::getTableEntry(int index) const {
+    if (index < 0 || index >= SIZE) return nullptr;
+    return table[index];
+}
+
 bool Hash_table::remove(const string& key) {
     int HashValue = hashFunction(key);
     HNode* current = table[HashValue];

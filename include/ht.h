@@ -3,7 +3,7 @@
 
 #include "utility.h"
 
-const size_t SIZE = 100; //Размер хэш-таблицы
+const size_t SIZE = 100; // Размер хэш-таблицы
 
 class HNode {
 public:
@@ -11,7 +11,6 @@ public:
     string value;
     HNode* next;
 
-     // Конструктор для удобства создания узлов
     HNode(const string& k, const string& v) : key(k), value(v), next(nullptr) {}
 };
 
@@ -20,15 +19,17 @@ private:
     HNode* table[SIZE];
     int sizetable = 0;
 
-    int hashFunction(const string& key); // Хеш-функция
+    int hashFunction(const string& key);
 
 public:
-    Hash_table(); //Инициализация хэш таблицы
-    ~Hash_table(); //Деконструктор
+    Hash_table();
+    ~Hash_table();
 
-    void insert(string &key, string &value); //Функция долбавления элемента
+    void insert(string& key, string& value);
     bool get(const string& key, string& value);
     bool remove(const string& key);
+    int size() const; 
+    HNode* getTableEntry(int index) const; // Новый метод для доступа к элементам
 };
 
 #include "../src/hash_table.cpp"

@@ -28,8 +28,9 @@ public:
     void popBack(); //Удаление в конце списка
     void removeAt(string value); //Удаление по индексу
     bool find(string value); //Поиск значений в списке
+    size_t getSize() const;
     void clearSList();
-    Node* getHead() const;
+    Node* getHead() const; // Добавлен метод getHead
 };
 
 
