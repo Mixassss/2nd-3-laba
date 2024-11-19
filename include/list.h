@@ -61,6 +61,7 @@ public:
     void removeAt(string value); //Удаление по индексу
     bool find(string value); //Поиск значений в списке
     void print(); // Функция вывода списка
+    size_t getSize() const;
     void clearDList();
     
 };

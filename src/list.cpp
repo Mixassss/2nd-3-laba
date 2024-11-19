@@ -229,6 +229,10 @@ void DoublyLinkedList::print() {
     cout << endl;
 }
 
+size_t DoublyLinkedList::getSize() const {
+    return elementCount;
+}
+
 void DoublyLinkedList::clearDList() {
     while (!isEmpty()) {
         popFront();
