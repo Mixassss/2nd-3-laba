@@ -1,8 +1,8 @@
 #include "../include/ht.h"
 
-Hash_table::Hash_table() {
-    for(size_t i = 0; i < SIZE; ++i) {
-        table[i] = nullptr; //Присваивание каждой ноды, нулевого значения
+Hash_table::Hash_table() : sizetable(0) {
+    for (size_t i = 0; i < SIZE; ++i) {
+        table[i] = nullptr; // Присваивание каждой ноды нулевого значения
     }
 }
 
@@ -22,41 +22,40 @@ int Hash_table::hashFunction(const string& key) {
     return hashFn(key) % SIZE;
 }
 
-void Hash_table::insert(string &key, string &value) {
-    int hashValue = hashFunction(key); // Хэш значение соответствующее этому ключу
-    HNode* newPair = new HNode(key, value); // Используем конструктор HNode
+void Hash_table::insert(const string& key, const string& value) {
+    int hashValue = hashFunction(key);
+    HNode* newPair = new HNode(key, value);
 
     if(table[hashValue] == nullptr) {
-        table[hashValue] = newPair; // Если ячейка пуста, вставляем новый элемент
+        table[hashValue] = newPair;
         sizetable++;
     } else {
         HNode* current = table[hashValue];
         while(current) { 
             if(current->key == key) {
-                current->value = value; // Обновляем значение, если ключ существует
-                delete newPair; // Удаляем временный узел
+                current->value = value;
+                delete newPair;
                 return;
             }
-            if (current->next == nullptr) break; // Если достигли конца цепочки
+            if (current->next == nullptr) break;
             current = current->next;
         }
-        current->next = newPair; // Добавляем новый элемент в конец цепочки
+        current->next = newPair;  
         sizetable++;
     }
 }
 
-bool Hash_table::get(const string& key, string& value) {
-    int HashValue = hashFunction(key); //Хэш значение соответсвующее этому ключу
-    HNode* current = table[HashValue];
+bool Hash_table::get(const string& key, string &value) {
+    int hashValue = hashFunction(key);
+    HNode* current = table[hashValue];
     while(current) {
         if(current->key == key) {
-            value = current->value; //Возвращаем значение
-            cout << value << endl;
-            return true; //Ключ найден
+            value = current->value;
+            return true;
         }
         current = current->next;
     }
-    return false; //Ключ не найден
+    return false;
 }
 
 int Hash_table::size() const {
@@ -69,22 +68,23 @@ HNode* Hash_table::getTableEntry(int index) const {
 }
 
 bool Hash_table::remove(const string& key) {
-    int HashValue = hashFunction(key);
-    HNode* current = table[HashValue];
+    int hashValue = hashFunction(key);
+    HNode* current = table[hashValue];
     HNode* perv = nullptr;
 
     while(current) {
         if(current->key == key) {
             if(perv) {
-                perv->next = current->next; //Удаление из цепочки
+                perv->next = current->next;
             } else {
-                table[HashValue] = current->next; // Если это первый элемент в цепочке
+                table[hashValue] = current->next;
             }
-            delete current; // Освобождаем память
-            return true; // Успешное удаление
+            delete current; 
+            sizetable--;  // Уменьшаем sizetable при удалении
+            return true; 
         }
         perv = current;
         current = current->next;
     }
-    return false; // Ключ не найден
+    return false; 
 }
