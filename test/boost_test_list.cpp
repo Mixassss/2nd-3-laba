@@ -2,7 +2,23 @@
 #include <boost/test/included/unit_test.hpp>
 #include "../include/list.h"
 
+class Timer { // Класс для измерения времени выполнения
+    chrono::time_point<chrono::steady_clock> start_time; 
+public:
+    void start() {
+        start_time = chrono::steady_clock::now(); // Запускаем таймер
+    }
+
+    double elapsed() {
+        auto end_time = chrono::steady_clock::now(); // Получаем текущее время
+        chrono::duration<double> duration = end_time - start_time; // Вычисляем продолжительность
+        return duration.count(); // Возвращаем продолжительность в секундах
+    }
+};
+
 BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_Front) {
+    Timer timer;
+    timer.start();
     SinglyLinkedList sList;
 
     BOOST_CHECK(sList.isEmpty());
@@ -41,9 +57,13 @@ BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_Front) {
 
     sList.print();
     BOOST_CHECK_EQUAL(sList.getSize(), 0);
+
+    cout << "Singly list push front test: " << timer.elapsed() << " seconds" << endl;
 }
 
 BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_Back) {
+    Timer timer;
+    timer.start();
     SinglyLinkedList sList;
 
     BOOST_CHECK(sList.isEmpty());
@@ -82,9 +102,13 @@ BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_Back) {
 
     sList.print();
     BOOST_CHECK_EQUAL(sList.getSize(), 0);
+
+    cout << "Singly list push back test: " << timer.elapsed() << " seconds" << endl;
 }
 
 BOOST_AUTO_TEST_CASE(DoublyLinkedList_Test) {
+    Timer timer;
+    timer.start();
     DoublyLinkedList dList;
 
     BOOST_CHECK(dList.isEmpty());
@@ -128,4 +152,6 @@ BOOST_AUTO_TEST_CASE(DoublyLinkedList_Test) {
 
     dList.print(); 
     BOOST_CHECK_EQUAL(dList.getSize(), 0);
+
+    cout << "Doubly list test: " << timer.elapsed() << " seconds" << endl;
 }
