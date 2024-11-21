@@ -585,10 +585,34 @@ Hash_table hReadFile(string& path, string& name) { // ф-ия чтения Хе�
   return nums;
 }
 
+Hash_table hReadFile(string& path, string& name) { // ф-ия чтения Хеш-таблицы из файла
+  Hash_table nums;
+  string str;
+  ifstream fin;
+  fin.open(path);
+  while (getline(fin, str)) {
+    stringstream ss(str);
+    string token;
+    getline(ss, token, ' ');
+    if (token == name) {
+      while (getline(ss, token, ' ')) {
+        int position = token.find_first_of(':');
+        token.replace(position, 1, " ");
+        stringstream iss(token);
+        string key, value;
+        iss >> key >> value;
+        nums.insert(key, value);
+      }
+    }
+  }
+  fin.close();
+  return nums;
+}
+
 string printHashTable( Hash_table& ht, string& name) { // Функция для перебора всех элементов хеш-таблицы
   string str = name + ' ';
   for (int i = 0; i < SIZE; ++i) {
-    HNode* current = ht.getTableEntry(i);
+    HNode* current = ht.table[i];
     while (current) {
       str += current->key + ':' + current->value + ' ';
       current = current->next;
@@ -598,50 +622,51 @@ string printHashTable( Hash_table& ht, string& name) { // Функция для 
 }
 
 void HPUSH(string& name, string& key, string& value, string& path) {
-    string textfull = Ftext(path, name);
-    Hash_table nums = hReadFile(path, name);
+  string textfull = Ftext(path, name);
+  Hash_table nums = hReadFile(path, name);
     
-    string str;
-    if (nums.size() != 0) { // Используйте метод size()
-        nums.insert(key, value);
-        str = printHashTable(nums, name);
-        textfull += str;
-        write(path, textfull);
-    } else {
-        str = name + ' ' + key + ':' + value;
-        textfull += str;
-        write(path, textfull);
-    }
+  string str;
+  if (nums.sizetable != 0) {
+    nums.insert(key, value);
+    str = printHashTable(nums, name);
+    textfull += str;
+    write(path, textfull);
+  } else {
+    str = name + ' ' + key + ':' + value;
+    textfull += str;
+    write(path, textfull);
+  }
 }
 
 void HPOP(string& name, string& key, string& path) {
-    string textfull = Ftext(path, name);
-    Hash_table nums = hReadFile(path, name);
+  string textfull = Ftext(path, name);
+  Hash_table nums = hReadFile(path, name);
 
-    string str;
-    if (nums.size() != 0) { // Используйте метод size()
-        if (nums.remove(key)) {
-            str = printHashTable(nums, name);
-            textfull += str;
-            write(path, textfull);
-        } else {
-            throw out_of_range("Ошибка, нет такого ключа");
-        }
+  string str;
+  if (nums.sizetable != 0) {
+    if (nums.remove(key)) {
+      str = printHashTable(nums, name);
+      textfull += str;
+      write(path, textfull);
     } else {
-        throw out_of_range("Ошибка, нет такой таблицы или она пуста");
+      throw out_of_range("Ошибка, нет такого ключа");
     }
+  } else {
+    throw out_of_range("Ошибка, нет такой таблицы или она пуста");
+  }
 }
 
 void HGET(string& name, string& key, string& path) {
-    Hash_table data = hReadFile(path, name);
+  Hash_table data = hReadFile(path, name);
 
-    if (data.size() != 0) { // Используйте метод size()
-        string value;
-        if (!data.get(key, value)) {
-            throw out_of_range("Ошибка: нет такого ключа");
-        }
+  string str;
+  if (data.sizetable != 0) {
+    string value;
+    if (!data.get(key, value)) {
+      throw out_of_range("Ошибка: нет такого ключа");
+    }
     } else {
-        throw out_of_range("Ошибка: нет такой таблицы или она пуста");
+      throw out_of_range("Ошибка: нет такой таблицы или она пуста");
     }
 }
 
