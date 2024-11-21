@@ -2,7 +2,23 @@
 #include <boost/test/included/unit_test.hpp>
 #include "../include/queue.h"
 
+class Timer { // Класс для измерения времени выполнения
+    chrono::time_point<chrono::steady_clock> start_time; 
+public:
+    void start() {
+        start_time = chrono::steady_clock::now(); // Запускаем таймер
+    }
+
+    double elapsed() {
+        auto end_time = chrono::steady_clock::now(); // Получаем текущее время
+        chrono::duration<double> duration = end_time - start_time; // Вычисляем продолжительность
+        return duration.count(); // Возвращаем продолжительность в секундах
+    }
+};
+
 BOOST_AUTO_TEST_CASE(Queue_Test) {
+    Timer timer;
+    timer.start();
     Queue queue;
 
     BOOST_CHECK(queue.isempty());
@@ -30,10 +46,14 @@ BOOST_AUTO_TEST_CASE(Queue_Test) {
     for (int i = 0; i < 30; ++i) {
         queue.push(to_string(i));
     }
-     BOOST_CHECK_THROW(queue.push("overflow"), overflow_error);
+    BOOST_CHECK_THROW(queue.push("overflow"), overflow_error);
+
+    cout << "Queue test time: " << timer.elapsed() << " seconds" << endl;
 }
 
 BOOST_AUTO_TEST_CASE(Queue_Constructor_Test) {
+    Timer timer;
+    timer.start();
     Queue customQueue(30);
     
     BOOST_CHECK(customQueue.isempty());
@@ -51,4 +71,6 @@ BOOST_AUTO_TEST_CASE(Queue_Constructor_Test) {
     }
     
     BOOST_CHECK(customQueue.isempty());
+
+    cout << "Queue constructor test time: " << timer.elapsed() << " seconds" << endl;
 }
