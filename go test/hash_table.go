@@ -1,4 +1,4 @@
-package main
+package hash
 
 import (
 	"fmt"
@@ -39,7 +39,7 @@ func (ht *HashTable) Insert(key, value string) {
 		current := ht.table[hashValue]
 		for current != nil {
 			if current.key == key {
-				current.value = value // Обновляем значение
+				current.value = value // Update value
 				return
 			}
 			if current.next == nil {
@@ -57,11 +57,11 @@ func (ht *HashTable) Get(key string) (string, bool) {
 	current := ht.table[hashValue]
 	for current != nil {
 		if current.key == key {
-			return current.value, true // Ключ найден
+			return current.value, true // Key found
 		}
 		current = current.next
 	}
-	return "", false // Ключ не найден
+	return "", false // Key not found
 }
 
 func (ht *HashTable) Remove(key string) bool {
@@ -76,7 +76,7 @@ func (ht *HashTable) Remove(key string) bool {
 			} else {
 				ht.table[hashValue] = current.next
 			}
-			ht.sizetable-- // Уменьшаем размер
+			ht.sizetable-- // Decrease size
 			return true
 		}
 		prev = current
@@ -86,7 +86,7 @@ func (ht *HashTable) Remove(key string) bool {
 }
 
 func (ht *HashTable) Size() int {
-	return ht.sizetable // Возвращаем текущее количество элементов
+	return ht.sizetable // Return current size
 }
 
 func main() {

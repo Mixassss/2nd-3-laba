@@ -2,7 +2,24 @@
 #include <boost/test/included/unit_test.hpp>
 #include "../include/arr.h"
 
+
+class Timer { // Класс для измерения времени выполнения
+    chrono::time_point<chrono::steady_clock> start_time; 
+public:
+    void start() {
+        start_time = chrono::steady_clock::now(); // Запускаем таймер
+    }
+
+    double elapsed() {
+        auto end_time = chrono::steady_clock::now(); // Получаем текущее время
+        chrono::duration<double> duration = end_time - start_time; // Вычисляем продолжительность
+        return duration.count(); // Возвращаем продолжительность в секундах
+    }
+};
+
 BOOST_AUTO_TEST_CASE(Array_Test_Push) {
+    Timer timer;
+    timer.start();
     Array arr;
 
     arr.addToEnd("1");
@@ -37,9 +54,13 @@ BOOST_AUTO_TEST_CASE(Array_Test_Push) {
     arr.removeAtIndex(0);
     arr.removeAtIndex(0);
     BOOST_CHECK_EQUAL(arr.getSize(), 0);
+
+    cout << "Array push test time: " << timer.elapsed() << " seconds" << endl;
 }
 
 BOOST_AUTO_TEST_CASE(Array_Additional_Test) {
+    Timer timer;
+    timer.start();
     Array arr;
 
     // Проверка на удаление из пустого массива
@@ -60,9 +81,13 @@ BOOST_AUTO_TEST_CASE(Array_Additional_Test) {
     BOOST_CHECK_EQUAL(arr.getIndex(0), "3");
     arr.replaceAtIndex(10, "4"); // Игнорируется
     BOOST_CHECK_EQUAL(arr.getSize(), 1);
+
+    cout << "Array additional test time: " << timer.elapsed() << " seconds" << endl;
 }
 
 BOOST_AUTO_TEST_CASE(Array_Test_Index) {
+    Timer timer;
+    timer.start();
     Array arr;
 
     arr.addAtIndex(0, "5");
@@ -93,9 +118,13 @@ BOOST_AUTO_TEST_CASE(Array_Test_Index) {
     arr.removeAtIndex(0);
     arr.removeAtIndex(0);
     BOOST_CHECK_EQUAL(arr.getSize(), 0);
+
+    cout << "Array add index test time: " << timer.elapsed() << " seconds" << endl;
 }
 
 BOOST_AUTO_TEST_CASE(Array_Test_Resize) {
+    Timer timer;
+    timer.start();
     Array arr;
 
     // Тестируем добавление элементов, чтобы вызвать resize
@@ -118,4 +147,6 @@ BOOST_AUTO_TEST_CASE(Array_Test_Resize) {
 
     string output = buffer.str();
     BOOST_CHECK(output == "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 \n"); // Проверка формата вывода
+
+    cout << "Array resize and showarray test time: " << timer.elapsed() << " seconds" << endl;
 }
