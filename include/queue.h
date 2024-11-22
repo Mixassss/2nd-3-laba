@@ -21,6 +21,10 @@ public:
     string pop(); // функция удаления элемента с начала очереди и его возврат
     string peek(); // функция вывода элемента в начале очереди
     int Size();
+    void write_serialize(const string& filename);
+    void deserialize(const string& filename);
+    void serializeBinary(const string& filename);
+    void deserializeBinary(const string& filename);
 };
 
 #include "../src/queue.cpp"

@@ -76,3 +76,49 @@ bool Array::find(const string& value) const {
 size_t Array::getSize() const {
     return size;
 }
+
+void Array::write_serialize(const string& filename) {
+    ofstream fout(filename);
+    for (size_t i = 0; i < size; ++i) {
+        fout << arr[i] << endl; // Записываем каждый элемент в новую строку
+    }
+    fout.close();
+}
+
+void Array::deserialize(const string& filename) {
+    delete [] arr; // Освобождаем предыдущее место
+    size = 0;
+    capacity = 10; // Сбрасываем емкость
+    arr = new string[capacity];
+    ifstream fin(filename);
+    string value;
+    while(getline(fin, value)) {
+        addToEnd(value); // Добавляем значения в конец массива
+    }
+    fin.close();
+}
+
+void Array::serializeBinary(const string& filename) {
+    ofstream fout(filename, ios::binary);
+    for (size_t i = 0; i < size; ++i ) {
+        size_t length = arr[i].size();
+        fout.write(reinterpret_cast<char*>(&length), sizeof(length)); // Записываем длину строки
+        fout.write(arr[i].data(), length); // Записываем данные
+    }
+    fout.close();
+}
+
+void Array::deserializeBinary(const string& filename) {
+    delete [] arr; // Освобождаем предыдущее место
+    size = 0;
+    capacity = 10; // Сбрасываем емкость
+    arr = new string[capacity]; // Создаем новый массив
+    ifstream fin(filename, ios::binary);
+    size_t length;
+    while (fin.read(reinterpret_cast<char*>(&length), sizeof(length))) {
+        string value(length, '\0');
+        fin.read(&value[0], length); // Читаем данные
+        addToEnd(value); // Добавляем значения в конец массива
+    }
+    fin.close();
+}

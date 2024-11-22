@@ -45,3 +45,42 @@ string Queue::peek() {
 int Queue::Size() {
     return size;
 }
+
+void Queue::write_serialize(const string& filename) {
+    ofstream fout(filename);
+    for (size_t i = 0; i < size; ++i) {
+        fout << data[(front + i) % capacity] << endl; // Записываем каждый элемент в новую строку
+    }
+    fout.close();
+}
+
+void Queue::deserialize(const string& filename) {
+    ifstream fin(filename);
+    string value;
+    while (getline(fin, value)) {
+        push(value); // Добавляем значения в конец массива
+    }
+    fin.close();
+}
+
+void Queue::serializeBinary(const string& filename) {
+    ofstream fout(filename, ios::binary);
+    for (size_t i = 0; i < size; ++i) {
+        string& value = data[(front + i) % capacity];
+        size_t length = value.length();
+        fout.write(reinterpret_cast<char*>(&length), sizeof(length)); // Записываем длину строки
+        fout.write(value.data(), length); // Записываем данные
+    }
+    fout.close();
+}
+
+void Queue::deserializeBinary(const string& filename) {
+    ifstream fin(filename, ios::binary);
+    size_t length;
+    while (fin.read(reinterpret_cast<char*>(&length), sizeof(length))) {
+        string value(length, '\0');
+        fin.read(&value[0], length); // Читаем данные
+        push(value); // Добавляем значения в конец массива
+    }
+    fin.close();
+}

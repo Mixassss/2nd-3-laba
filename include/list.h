@@ -31,6 +31,10 @@ public:
     size_t getSize() const;
     void clearSList();
     Node* getHead() const; // Добавлен метод getHead
+    void write_serialize(const string& filename);
+    void deserialize(const string& filename);
+    void serializeBinary(const string& filename);
+    void deserializeBinary(const string& filename);
 };
 
 

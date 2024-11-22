@@ -27,6 +27,7 @@ void SinglyLinkedList::print() {
     }
     cout << endl;
 }
+
 void SinglyLinkedList::pushFront(string value) { 
     Node* newNode = new Node(value);
     newNode->next = head; //Следующий узел, становится текущей головой списка
@@ -113,6 +114,50 @@ void SinglyLinkedList::clearSList() {
     while (!isEmpty()) {
         popFront();
     }
+}
+
+void SinglyLinkedList::write_serialize(const string& filename) {
+    ofstream fout(filename);
+    Node* current = head;
+    while (current) {
+        fout << current->data << endl; // Записываем каждый элемент в новую строку
+        current = current->next;
+    }
+    fout.close();
+}
+
+void SinglyLinkedList::deserialize(const string& filename) {
+    clearSList();
+    ifstream fin(filename);
+    string value;
+    while(getline(fin, value)) {
+        pushBack(value);
+    }
+    fin.close();
+}
+
+void SinglyLinkedList::serializeBinary(const string& filename) {
+    ofstream fout(filename, ios::binary);
+    Node* current = head;
+    while (current) {
+        size_t length = current->data.size();
+        fout.write(reinterpret_cast<char*>(&length), sizeof(length)); // Записываем длину строки
+        fout.write(current->data.data(), length); // Записываем данные
+        current = current->next;
+    }
+    fout.close();
+}
+
+void SinglyLinkedList::deserializeBinary(const string& filename) {
+    clearSList();
+    ifstream fin(filename, ios::binary);
+    size_t length;
+    while (fin.read(reinterpret_cast<char*>(&length), sizeof(length))) {
+        string value(length, '\0');
+        fin.read(&value[0], length); // Читаем данные
+        pushBack(value); // Добавляем значения в конец списка
+    }
+    fin.close();
 }
 
 DoubleNode::DoubleNode(string value){ 

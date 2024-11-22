@@ -74,3 +74,39 @@ BOOST_AUTO_TEST_CASE(Queue_Constructor_Test) {
 
     cout << "Queue constructor test time: " << timer.elapsed() << " seconds" << endl;
 }
+
+BOOST_AUTO_TEST_CASE(Queue_Serialization_Test) {
+    Timer timer;
+    timer.start();
+    Queue queue;
+
+    for (int i = 0; i < 5; ++i) {
+        queue.push(to_string(i));
+    }
+
+    // Сериализация в текстовом формате
+    queue.write_serialize("test_queue.txt");
+    
+    // Создаем новую очередь и десериализуем данные
+    Queue newQueue;
+    newQueue.deserialize("test_queue.txt");
+    
+    BOOST_CHECK_EQUAL(newQueue.Size(), 5);
+    for (int i = 0; i < 5; ++i) {
+        BOOST_CHECK_EQUAL(newQueue.pop(), to_string(i));
+    }
+
+    // Сериализация в бинарном формате
+    queue.serializeBinary("test_queue.bin");
+    
+    // Создаем новую очередь и десериализуем данные
+    Queue binaryQueue;
+    binaryQueue.deserializeBinary("test_queue.bin");
+    
+    BOOST_CHECK_EQUAL(binaryQueue.Size(), 5);
+    for (int i = 0; i < 5; ++i) {
+        BOOST_CHECK_EQUAL(binaryQueue.pop(), to_string(i));
+    }
+
+    cout << "Queue serialization test time: " << timer.elapsed() << " seconds" << endl;
+}

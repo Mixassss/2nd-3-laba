@@ -63,3 +63,45 @@ BOOST_AUTO_TEST_CASE(StackOverflow) {
 
     cout << "Stack test overflow:  " << timer.elapsed() << " seconds" << endl;
 }
+
+BOOST_AUTO_TEST_CASE(Stack_Serialization_Text) {
+    Timer timer;
+    timer.start();
+    Stack stack;
+
+    stack.push("1");
+    stack.push("2");
+    
+    // Тестирование сериализации в текстовом формате
+    stack.write_serialize("stack_text.txt");
+    
+    Stack newStack;
+    newStack.deserialize("stack_text.txt");
+
+    BOOST_CHECK_EQUAL(newStack.size(), 2);
+    BOOST_CHECK_EQUAL(newStack.pop(), "2");
+    BOOST_CHECK_EQUAL(newStack.pop(), "1");
+
+    cout << "Stack text serialization and deserialization: " << timer.elapsed() << " seconds" << endl;
+}
+
+BOOST_AUTO_TEST_CASE(Stack_Serialization_Binary) {
+    Timer timer;
+    timer.start();
+    Stack stack;
+
+    stack.push("3");
+    stack.push("4");
+    
+    // Тестирование сериализации в бинарном формате
+    stack.serializeBinary("stack_binary.bin");
+    
+    Stack newStack;
+    newStack.deserializeBinary("stack_binary.bin");
+
+    BOOST_CHECK_EQUAL(newStack.size(), 2);
+    BOOST_CHECK_EQUAL(newStack.pop(), "4");
+    BOOST_CHECK_EQUAL(newStack.pop(), "3");
+
+    cout << "Stack binary serialization and deserialization: " << timer.elapsed() << " seconds" << endl;
+}

@@ -19,6 +19,10 @@ public:
     string peek(); // Функция удаления верхнего элемента
     bool isEmpty();
     size_t size();
+    void write_serialize(const string& filename);
+    void deserialize(const string& filename);
+    void serializeBinary(const string& filename);
+    void deserializeBinary(const string& filename);
 };
 
 #include "../src/stack.cpp"

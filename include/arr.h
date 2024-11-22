@@ -20,6 +20,10 @@ public:
     bool find(const string& value) const; // Новый метод для поиска элемента
     size_t getSize() const;
     void resize(); // Метод изменения размера массива
+    void write_serialize(const string& filename);
+    void deserialize(const string& filename);
+    void serializeBinary(const string& filename);
+    void deserializeBinary(const string& filename);
 };
 
 #include "../src/array.cpp"
