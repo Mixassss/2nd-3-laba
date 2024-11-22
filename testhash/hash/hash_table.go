@@ -1,11 +1,10 @@
 package hash
 
 import (
-	"fmt"
 	"hash/fnv"
 )
 
-const SIZE = 100
+const SIZE = 100 // Размер хэш-таблицы
 
 type HNode struct {
 	key   string
@@ -15,31 +14,34 @@ type HNode struct {
 
 type HashTable struct {
 	table     [SIZE]*HNode
-	sizetable int
+	tableSize int
 }
 
+// Создание нового экземпляра HashTable
 func NewHashTable() *HashTable {
 	return &HashTable{}
 }
 
+// Хеш-функция
 func (ht *HashTable) hashFunction(key string) int {
 	h := fnv.New32a()
 	h.Write([]byte(key))
-	return int(h.Sum32() % uint32(SIZE))
+	return int(h.Sum32()) % SIZE
 }
 
+// Функция добавления элемента
 func (ht *HashTable) Insert(key, value string) {
 	hashValue := ht.hashFunction(key)
 	newPair := &HNode{key: key, value: value}
 
 	if ht.table[hashValue] == nil {
 		ht.table[hashValue] = newPair
-		ht.sizetable++
+		ht.tableSize++
 	} else {
 		current := ht.table[hashValue]
 		for current != nil {
 			if current.key == key {
-				current.value = value // Update value
+				current.value = value // Обновляем значение
 				return
 			}
 			if current.next == nil {
@@ -47,27 +49,30 @@ func (ht *HashTable) Insert(key, value string) {
 			}
 			current = current.next
 		}
-		current.next = newPair
-		ht.sizetable++
+		current.next = newPair // Добавляем новый элемент
+		ht.tableSize++
 	}
 }
 
+// Функция получения значения по ключу
 func (ht *HashTable) Get(key string) (string, bool) {
 	hashValue := ht.hashFunction(key)
 	current := ht.table[hashValue]
+
 	for current != nil {
 		if current.key == key {
-			return current.value, true // Key found
+			return current.value, true // Ключ найден
 		}
 		current = current.next
 	}
-	return "", false // Key not found
+	return "", false // Ключ не найден
 }
 
+// Функция удаления элемента
 func (ht *HashTable) Remove(key string) bool {
 	hashValue := ht.hashFunction(key)
 	current := ht.table[hashValue]
-	var prev *HNode
+	var prev *HNode = nil
 
 	for current != nil {
 		if current.key == key {
@@ -76,7 +81,7 @@ func (ht *HashTable) Remove(key string) bool {
 			} else {
 				ht.table[hashValue] = current.next
 			}
-			ht.sizetable-- // Decrease size
+			ht.tableSize-- // Уменьшаем размер
 			return true
 		}
 		prev = current
@@ -85,26 +90,7 @@ func (ht *HashTable) Remove(key string) bool {
 	return false
 }
 
+// Возвращает текущее количество элементов
 func (ht *HashTable) Size() int {
-	return ht.sizetable // Return current size
-}
-
-func main() {
-	ht := NewHashTable()
-	ht.Insert("key1", "value1")
-	ht.Insert("key2", "value2")
-
-	if value, found := ht.Get("key1"); found {
-		fmt.Println("Found:", value)
-	} else {
-		fmt.Println("Not found")
-	}
-
-	fmt.Println("Size of hash table:", ht.Size())
-
-	if ht.Remove("key1") {
-		fmt.Println("Key1 removed")
-	}
-
-	fmt.Println("Size of hash table after removal:", ht.Size())
+	return ht.tableSize
 }
