@@ -67,7 +67,10 @@ public:
     void print(); // Функция вывода списка
     size_t getSize() const;
     void clearDList();
-    
+    void write_serialize(const string& filename);
+    void deserialize(const string& filename);
+    void serializeBinary(const string& filename);
+    void deserializeBinary(const string& filename);
 };
 
 #include "../src/list.cpp"

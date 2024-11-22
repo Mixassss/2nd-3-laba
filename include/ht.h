@@ -17,11 +17,11 @@ public:
 class Hash_table {
 private:
     HNode* table[SIZE];
-    int sizetable;
 
     int hashFunction(const string& key); // Хеш-функция
 
 public:
+    int sizetable;
     Hash_table(); // Инициализация хэш таблицы
     ~Hash_table(); // Деконструктор
 
@@ -29,6 +29,8 @@ public:
     bool get(const string& key, string& value);
     bool remove(const string& key);
     int size() const;
+
+    HNode** getTable() { return table; };
 };
 
 #include "../src/hash_table.cpp"

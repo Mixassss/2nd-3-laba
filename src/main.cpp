@@ -610,15 +610,15 @@ Hash_table hReadFile(string& path, string& name) { // ф-ия чтения Хе�
 }
 
 string printHashTable( Hash_table& ht, string& name) { // Функция для перебора всех элементов хеш-таблицы
-  string str = name + ' ';
-  for (int i = 0; i < SIZE; ++i) {
-    HNode* current = ht.table[i];
-    while (current) {
-      str += current->key + ':' + current->value + ' ';
-      current = current->next;
+    string str = name + ' ';
+    for (int i = 0; i < SIZE; ++i) {
+        HNode* current = ht.getTable()[i]; // Получаем доступ через метод
+        while (current) {
+            str += current->key + ':' + current->value + ' ';
+            current = current->next;
+        }
     }
-  }
-  return str;
+    return str;
 }
 
 void HPUSH(string& name, string& key, string& value, string& path) {
@@ -626,7 +626,7 @@ void HPUSH(string& name, string& key, string& value, string& path) {
   Hash_table nums = hReadFile(path, name);
     
   string str;
-  if (nums.sizetable != 0) {
+  if (nums.size() != 0) {
     nums.insert(key, value);
     str = printHashTable(nums, name);
     textfull += str;
@@ -643,7 +643,7 @@ void HPOP(string& name, string& key, string& path) {
   Hash_table nums = hReadFile(path, name);
 
   string str;
-  if (nums.sizetable != 0) {
+  if (nums.size() != 0) {
     if (nums.remove(key)) {
       str = printHashTable(nums, name);
       textfull += str;
@@ -660,7 +660,7 @@ void HGET(string& name, string& key, string& path) {
   Hash_table data = hReadFile(path, name);
 
   string str;
-  if (data.sizetable != 0) {
+  if (data.size() != 0) {
     string value;
     if (!data.get(key, value)) {
       throw out_of_range("Ошибка: нет такого ключа");

@@ -118,6 +118,7 @@ void SinglyLinkedList::clearSList() {
 
 void SinglyLinkedList::write_serialize(const string& filename) {
     ofstream fout(filename);
+    if (!fout.is_open()) return; // Проверка на успешное открытие файла
     Node* current = head;
     while (current) {
         fout << current->data << endl; // Записываем каждый элемент в новую строку
@@ -129,6 +130,7 @@ void SinglyLinkedList::write_serialize(const string& filename) {
 void SinglyLinkedList::deserialize(const string& filename) {
     clearSList();
     ifstream fin(filename);
+    if (!fin.is_open()) return; // Проверка на успешное открытие файла
     string value;
     while(getline(fin, value)) {
         pushBack(value);
@@ -138,6 +140,7 @@ void SinglyLinkedList::deserialize(const string& filename) {
 
 void SinglyLinkedList::serializeBinary(const string& filename) {
     ofstream fout(filename, ios::binary);
+    if (!fout.is_open()) return; // Проверка на успешное открытие файла
     Node* current = head;
     while (current) {
         size_t length = current->data.size();
@@ -151,6 +154,7 @@ void SinglyLinkedList::serializeBinary(const string& filename) {
 void SinglyLinkedList::deserializeBinary(const string& filename) {
     clearSList();
     ifstream fin(filename, ios::binary);
+    if (!fin.is_open()) return; // Проверка на успешное открытие файла
     size_t length;
     while (fin.read(reinterpret_cast<char*>(&length), sizeof(length))) {
         string value(length, '\0');
@@ -282,4 +286,52 @@ void DoublyLinkedList::clearDList() {
     while (!isEmpty()) {
         popFront();
     }
+}
+
+void DoublyLinkedList::write_serialize(const string& filename) {
+    ofstream fout(filename);
+    if (!fout.is_open()) return; // Проверка на успешное открытие файла
+    DoubleNode* current = head;
+    while (current) {
+        fout << current->data << endl; // Записываем каждый элемент в новую строку
+        current = current->next;
+    }
+    fout.close();
+}
+
+void DoublyLinkedList::deserialize(const string& filename) {
+    clearDList();
+    ifstream fin(filename);
+    if (!fin.is_open()) return; // Проверка на успешное открытие файла
+    string value;
+    while(getline(fin, value)) {
+        pushBack(value);
+    }
+    fin.close();
+}
+
+void DoublyLinkedList::serializeBinary(const string& filename) {
+    ofstream fout(filename, ios::binary);
+    if (!fout.is_open()) return; // Проверка на успешное открытие файла
+    DoubleNode* current = head;
+    while (current) {
+        size_t length = current->data.size();
+        fout.write(reinterpret_cast<char*>(&length), sizeof(length)); // Записываем длину строки
+        fout.write(current->data.data(), length); // Записываем данные
+        current = current->next;
+    }
+    fout.close();
+}
+
+void DoublyLinkedList::deserializeBinary(const string& filename) {
+    clearDList();
+    ifstream fin(filename, ios::binary);
+    if (!fin.is_open()) return; // Проверка на успешное открытие файла
+    size_t length;
+    while (fin.read(reinterpret_cast<char*>(&length), sizeof(length))) {
+        string value(length, '\0');
+        fin.read(&value[0], length); // Читаем данные
+        pushBack(value); // Добавляем значения в конец списка
+    }
+    fin.close();
 }
