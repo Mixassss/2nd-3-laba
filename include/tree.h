@@ -24,8 +24,10 @@ private:
     string _toString(NodeT* node);
     void printTree(NodeT* node, int depth);
     void clear(NodeT* node);
-    void _serializeToText(NodeT* node, ostringstream& oss);
-    NodeT* deserialize(istringstream& iss);
+    void serializeText(NodeT* node, ofstream& out);
+    NodeT* deserializeText(ifstream& in);
+    void serializeBinary(NodeT* node, ofstream& out);
+    NodeT* deserializeBinary(std::ifstream& in);
 
 public:
     CompleteBinaryTree();
@@ -36,8 +38,10 @@ public:
     void insert(int value);
     bool search(int value);
     bool isComplete();
-    string serializeToText();
-    void deserialize(const string& data);
+    void serializeToBinaryFile(const string& filename);
+    void deserializeFromBinaryFile(const string& filename);
+    void deserializeFromTextFile(const string& filename);
+    void serializeToTextFile(const string& filename);
 };
 
 #include "../src/complete_binary_tree.cpp"

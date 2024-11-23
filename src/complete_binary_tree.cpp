@@ -1,7 +1,7 @@
 #include "../include/tree.h"
 
 NodeT::NodeT(int value) {
-    data= value;
+    data = value;
     left = nullptr; 
     right = nullptr;
 }
@@ -96,36 +96,91 @@ CompleteBinaryTree::~CompleteBinaryTree() {
     clear(root);
 }
 
-// Сериализация дерева
-string CompleteBinaryTree::serializeToText() {
-    ostringstream oss;
-    _serializeToText(root, oss);
-    return oss.str();
+void CompleteBinaryTree::serializeToTextFile(const string& filename) {
+    ofstream out(filename);
+    if (out.is_open()) {
+        serializeText(root, out);
+        out.close();
+    }
 }
 
-void CompleteBinaryTree::_serializeToText(NodeT* node, ostringstream& oss) {
+void CompleteBinaryTree::serializeText(NodeT* node, ofstream& out) {
     if (node == nullptr) {
-        oss << "# "; // Используем "#" для обозначения пустых узлов
+        out << "  ";  // Используем "null" для представления пустого узла
         return;
     }
-    oss << node->data << " "; // Сохраняем значение узла
-    _serializeToText(node->left, oss); // Рекурсия для левого поддерева
-    _serializeToText(node->right, oss); // Рекурсия для правого поддерева
+
+    out << node->data << " "; // Сохраняем данные узла
+    serializeText(node->left, out); // Сериализуем левое поддерево
+    serializeText(node->right, out); // Сериализуем правое поддерево
 }
 
-// Десериализация дерева
-void CompleteBinaryTree::deserialize(const string& data) {
-    istringstream iss(data);
-    root = deserialize(iss);
+void CompleteBinaryTree::deserializeFromTextFile(const string& filename) {
+    ifstream in(filename);
+    if (in.is_open()) {
+        root = deserializeText(in);
+        in.close();
+    }
 }
 
-NodeT* CompleteBinaryTree::deserialize(istringstream& iss) {
+NodeT* CompleteBinaryTree::deserializeText(ifstream& in) {
     string value;
-    iss >> value;
-    if (value == "#") return nullptr; // Если пустой узел, возвращаем nullptr
-  
-    NodeT* node = new NodeT(stoi(value)); // Создаем новый узел
-    node->left = deserialize(iss); // Десериализация левого поддерева
-    node->right = deserialize(iss); // Десериализация правого поддерева
+    in >> value;
+
+    if (value == "  ") {
+        return nullptr; // Если "null", возвращаем пустой узел
+    }
+
+    NodeT* node = new NodeT(stoi(value)); // Создаем узел с прочитанным значением
+    node->left = deserializeText(in); // Десериализуем левое поддерево
+    node->right = deserializeText(in); // Десериализуем правое поддерево
+
     return node;
+}
+
+void CompleteBinaryTree::serializeBinary(NodeT* node, ofstream& out) {
+    if (node == nullptr) {
+        out.write(reinterpret_cast<char*>(&node), sizeof(node));
+        return;
+    }
+
+    out.write(reinterpret_cast<char*>(&node->data), sizeof(node->data)); // Сохраняем данные узла
+    serializeBinary(node->left, out); // Сериализуем левое поддерево
+    serializeBinary(node->right, out); // Сериализуем правое поддерево
+}
+
+// Десериализация из бинарного формата
+NodeT* CompleteBinaryTree::deserializeBinary(ifstream& in) {
+    NodeT* node = nullptr;
+    in.read(reinterpret_cast<char*>(&node), sizeof(node));
+
+    if (node == nullptr) {
+        return nullptr; // Проверяем, нет ли пустого узла
+    }
+
+    node = new NodeT(0); // Создаем узел с временным значением
+    in.read(reinterpret_cast<char*>(&node->data), sizeof(node->data)); // Читаем данные узла
+
+    node->left = deserializeBinary(in); // Десериализуем левое поддерево
+    node->right = deserializeBinary(in); // Десериализуем правое поддерево
+
+    return node;
+}
+
+// Метод сериализации в файл в бинарном формате
+void CompleteBinaryTree::serializeToBinaryFile(const string& filename) {
+    ofstream out(filename, ios::binary);
+    if (out.is_open()) {
+        serializeBinary(root, out);
+        out.close();
+    }
+}
+
+// Метод десериализации из файла в бинарном формате
+void CompleteBinaryTree::deserializeFromBinaryFile(const string& filename) {
+    ifstream in(filename, ios::binary);
+    if (in.is_open()) {
+        root = deserializeBinary(in);
+        in.close();
+    }
 }
