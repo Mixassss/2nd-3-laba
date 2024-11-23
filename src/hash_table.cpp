@@ -87,6 +87,7 @@ bool Hash_table::remove(const string& key) {
 
 void Hash_table::serializeToText(const string& filename) {
     ofstream fout(filename);
+
     for (size_t i = 0; i < SIZE; ++i) {
         HNode* current = table[i];
         while (current) {
@@ -99,12 +100,16 @@ void Hash_table::serializeToText(const string& filename) {
 
 void Hash_table::deserializeFromText(const string& filename) {
     ifstream fin(filename);
+
     string line;
     while (getline(fin, line)) {
-        size_t pos = line.find(': ');
+        size_t pos = line.find(':');
         if (pos != string::npos) {
             string key = line.substr(0, pos);
             string value = line.substr(pos + 1);
+            // Удаляем пробелы в начале и конце значений
+            key.erase(key.find_last_not_of(" ") + 1);
+            value.erase(0, value.find_first_not_of(" ")); // Удаляем пробелы в начале
             insert(key, value);
         }
     }

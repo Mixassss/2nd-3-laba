@@ -42,6 +42,9 @@ public:
     void deserializeFromBinaryFile(const string& filename);
     void deserializeFromTextFile(const string& filename);
     void serializeToTextFile(const string& filename);
+
+    NodeT* getRoot() const { return root; }
+    size_t getSize() const { return size; }
 };
 
 #include "../src/complete_binary_tree.cpp"
