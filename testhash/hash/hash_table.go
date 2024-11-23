@@ -4,14 +4,17 @@ import (
 	"hash/fnv"
 )
 
-const SIZE = 100 // Размер хэш-таблицы
+// Размер хэш-таблицы
+const SIZE = 100
 
+// Узел хэш-таблицы
 type HNode struct {
 	key   string
 	value string
 	next  *HNode
 }
 
+// Хэш-таблица
 type HashTable struct {
 	table     [SIZE]*HNode
 	tableSize int
@@ -29,33 +32,54 @@ func (ht *HashTable) hashFunction(key string) int {
 	return int(h.Sum32()) % SIZE
 }
 
-// Функция добавления элемента
+// Публичный метод для добавления элемента
 func (ht *HashTable) Insert(key, value string) {
+	ht.insert(key, value)
+}
+
+// Публичный метод для получения значения по ключу
+func (ht *HashTable) Get(key string) (string, bool) {
+	return ht.get(key)
+}
+
+// Публичный метод для удаления элемента
+func (ht *HashTable) Remove(key string) bool {
+	return ht.remove(key)
+}
+
+// Публичный метод для получения текущего количества элементов
+func (ht *HashTable) Size() int {
+	return ht.tableSize
+}
+
+// Приватный метод добавления элемента
+func (ht *HashTable) insert(key, value string) {
 	hashValue := ht.hashFunction(key)
 	newPair := &HNode{key: key, value: value}
 
 	if ht.table[hashValue] == nil {
 		ht.table[hashValue] = newPair
 		ht.tableSize++
-	} else {
-		current := ht.table[hashValue]
-		for current != nil {
-			if current.key == key {
-				current.value = value // Обновляем значение
-				return
-			}
-			if current.next == nil {
-				break
-			}
-			current = current.next
-		}
-		current.next = newPair // Добавляем новый элемент
-		ht.tableSize++
+		return
 	}
+
+	current := ht.table[hashValue]
+	for current != nil {
+		if current.key == key {
+			current.value = value // Обновление значения
+			return
+		}
+		if current.next == nil {
+			break
+		}
+		current = current.next
+	}
+	current.next = newPair // Добавление нового элемента
+	ht.tableSize++
 }
 
-// Функция получения значения по ключу
-func (ht *HashTable) Get(key string) (string, bool) {
+// Приватный метод получения значения по ключу
+func (ht *HashTable) get(key string) (string, bool) {
 	hashValue := ht.hashFunction(key)
 	current := ht.table[hashValue]
 
@@ -68,8 +92,8 @@ func (ht *HashTable) Get(key string) (string, bool) {
 	return "", false // Ключ не найден
 }
 
-// Функция удаления элемента
-func (ht *HashTable) Remove(key string) bool {
+// Приватный метод удаления элемента
+func (ht *HashTable) remove(key string) bool {
 	hashValue := ht.hashFunction(key)
 	current := ht.table[hashValue]
 	var prev *HNode = nil
@@ -81,16 +105,11 @@ func (ht *HashTable) Remove(key string) bool {
 			} else {
 				ht.table[hashValue] = current.next
 			}
-			ht.tableSize-- // Уменьшаем размер
+			ht.tableSize-- // Уменьшение размера
 			return true
 		}
 		prev = current
 		current = current.next
 	}
 	return false
-}
-
-// Возвращает текущее количество элементов
-func (ht *HashTable) Size() int {
-	return ht.tableSize
 }

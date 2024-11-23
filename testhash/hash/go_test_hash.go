@@ -66,6 +66,19 @@ func TestHashTable(t *testing.T) {
 	if size := ht.Size(); size != 0 {
 		t.Errorf("Expected size 0 after removing key2, got %d", size)
 	}
+
+	// Тест: Попытка вставить nil ключ
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("Expected panic when inserting nil key")
+		}
+	}()
+	ht.Insert("", "valueNil") // Ожидаем, что вставка nil не пройдет
+
+	// Тест: Получение значения для несуществующего ключа
+	if value, found := ht.Get("nonExistent"); found || value != "" {
+		t.Error("Expected nonExistent to be not found")
+	}
 }
 
 func BenchmarkHashTable(b *testing.B) {
