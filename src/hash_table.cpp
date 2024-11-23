@@ -84,3 +84,64 @@ bool Hash_table::remove(const string& key) {
     }
     return false; 
 }
+
+void Hash_table::serializeToText(const string& filename) {
+    ofstream fout(filename);
+    for (size_t i = 0; i < SIZE; ++i) {
+        HNode* current = table[i];
+        while (current) {
+            fout << current->key << ": " << current->value << endl;
+            current = current->next;
+        }
+    }
+    fout.close();
+}
+
+void Hash_table::deserializeFromText(const string& filename) {
+    ifstream fin(filename);
+    string line;
+    while (getline(fin, line)) {
+        size_t pos = line.find(': ');
+        if (pos != string::npos) {
+            string key = line.substr(0, pos);
+            string value = line.substr(pos + 1);
+            insert(key, value);
+        }
+    }
+    fin.close();
+}
+
+void Hash_table::serializeToBinary(const string& filename) {
+    ofstream fout(filename);
+    for (size_t i = 0; i < SIZE; ++i) {
+        HNode* current = table[i];
+        while (current) {
+            size_t keySize = current->key.size();
+            size_t valueSize = current->value.size();
+            fout.write(reinterpret_cast<char*>(&keySize), sizeof(keySize));
+            fout.write(current->key.c_str(), keySize);
+            fout.write(reinterpret_cast<char*>(&valueSize), sizeof(valueSize));
+            fout.write(current->value.c_str(), valueSize);
+            current = current->next;
+        }
+    }
+    fout.close();
+}
+
+void Hash_table::deserializeFromBinary(const string& filename) {
+    ifstream fin(filename, ios::binary);
+    while(fin.peek() != EOF) {
+        size_t keySize;
+        fin.read(reinterpret_cast<char*>(&keySize), sizeof(keySize));
+        string key(keySize, '\0');
+        fin.read(&key[0], keySize);
+
+        size_t valueSize;
+        fin.read(reinterpret_cast<char*>(&valueSize), sizeof(valueSize));
+        string value(valueSize, '\0');
+        fin.read(&value[0], valueSize);
+
+        insert(key, value);
+    }
+    fin.close();
+}

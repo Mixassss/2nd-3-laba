@@ -715,44 +715,35 @@ CompleteBinaryTree tReadFile(string& path, string& name) {
 
 void TPush(string& name, int& value, string& path) {
   string textfull = Ftext(path, name);
-    CompleteBinaryTree data = tReadFile(path, name);
-    string str;
-
-    if (data.getSize() != 0) {
-        data.insert(value);
-        str = name + ' ' + data.toString(); 
-        textfull += str;
-        write(path, textfull); 
-    } else {
-        str = name + ' ' + to_string(value);
-        textfull += str;
-        write(path, textfull);
-    }
+  CompleteBinaryTree data = tReadFile(path, name);
+  string str;
+  
+  if (data.size != 0) {
+    data.insert(value);
+    str = name + ' ' + data.toString(); 
+    textfull += str;
+    write(path, textfull); 
+  } else {
+    str = name + ' ' + to_string(value);
+    textfull += str;
+    write(path, textfull);
+  }
 }
 
 void TSearch(string& name, int value, string& path) {
-    CompleteBinaryTree nums = tReadFile(path, name);
-    if (nums.getSize() != 0) {
-        cout << (nums.search(value) ? "True" : "False") << endl;
-    } else {
-        throw out_of_range("Ошибка, нет такого дерева или оно пусто");
-    }
-}
-
-void TCheck(string& name, string& filename) {
-  CompleteBinaryTree nums = tReadFile(filename, name);
-  if (nums.getSize() != 0) {
-  if (nums.isComplete()) cout << "True" << endl;
-    else if (!nums.isComplete()) cout << "False" << endl;
+  CompleteBinaryTree nums = tReadFile(path, name);
+  if (nums.size != 0) {
+    cout << (nums.search(nums.root, value) ? "True" : "False") << endl;
   } else {
     throw out_of_range("Ошибка, нет такого дерева или оно пусто");
   }
 }
 
-void TPrint(string& name, string& path) {
-  CompleteBinaryTree nums = tReadFile(path, name);
-  if (nums.getSize() != 0) {
-    nums.print();
+void TCheck(string& name, string& filename) {
+  CompleteBinaryTree nums = tReadFile(filename, name);
+  if (nums.size != 0) {
+  if (nums.isComplete()) cout << "True" << endl;
+    else if (!nums.isComplete()) cout << "False" << endl;
   } else {
     throw out_of_range("Ошибка, нет такого дерева или оно пусто");
   }

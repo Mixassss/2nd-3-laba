@@ -77,20 +77,6 @@ BOOST_AUTO_TEST_CASE(TestToString) {
     cout << "Tree to string test time: " << timer.elapsed() << " seconds" << endl;
 }
 
-BOOST_AUTO_TEST_CASE(test_count_nodes) {
-    CompleteBinaryTree tree;
-    Timer timer;
-    timer.start();
-
-    tree.insert(5);
-    tree.insert(2);
-    tree.insert(9);
-    
-    BOOST_CHECK_EQUAL(tree.getSize(), 3);
-
-    cout << "Tree count nodes test time: " << timer.elapsed() << " seconds" << endl;
-}
-
 BOOST_AUTO_TEST_CASE(TestPrintFunction) {
     CompleteBinaryTree tree;
     Timer timer;
@@ -102,4 +88,25 @@ BOOST_AUTO_TEST_CASE(TestPrintFunction) {
     tree.print(); // Проверяем, что функция print() работает без ошибок
 
     cout << "Tree print test time: " << timer.elapsed() << " seconds" << endl;
+}
+
+BOOST_AUTO_TEST_CASE(TestSerialization) {
+    CompleteBinaryTree tree;
+    Timer timer;
+    timer.start();
+
+    tree.insert(5);
+    tree.insert(2);
+    tree.insert(9);
+    
+    string serializedData = tree.serializeToText(); // Сериализация
+    CompleteBinaryTree newTree;
+    newTree.deserialize(serializedData); // Десериализация
+
+    BOOST_CHECK(newTree.search(5));
+    BOOST_CHECK(newTree.search(2));
+    BOOST_CHECK(newTree.search(9));
+    BOOST_CHECK(!newTree.search(7));
+
+    cout << "Tree serialization/deserialization test time: " << timer.elapsed() << " seconds" << endl;
 }

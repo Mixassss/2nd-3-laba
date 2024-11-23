@@ -4,44 +4,40 @@
 #include "utility.h"
 
 class NodeT {
-private:
+public:
     int data;
     NodeT* left;
     NodeT* right;
 
-public:
     NodeT(int value);
-    int getData() const { return data; }
-    NodeT* getLeft() const { return left; }
-    NodeT* getRight() const { return right; }
-    void setLeft(NodeT* nodet) { left = nodet; }
-    void setRight(NodeT* nodet) { right = nodet; }
 };
 
 class CompleteBinaryTree {
 private:
-    NodeT* root; // Главная часть в бинарном дереве
+    NodeT* root;
     size_t size;
-    
-    NodeT* _insert(NodeT* nodeb, int value);
-    bool search(NodeT* nodet, int value); // Функция поиска
-    bool isComplete(NodeT* nodet, int index, int totalNodes); // Проверка на complete
-    int countNodes(NodeT* nodet);
-    string _toString(NodeT* nodet);
+
+    NodeT* _insert(NodeT* node, int value);
+    bool search(NodeT* node, int value);
+    bool isComplete(NodeT* node, int index, int totalNodes);
+    int countNodes(NodeT* node);
+    string _toString(NodeT* node);
     void printTree(NodeT* node, int depth);
-    void clear(NodeT* nodet); // Освобождение памяти
+    void clear(NodeT* node);
+    void _serializeToText(NodeT* node, ostringstream& oss);
+    NodeT* deserialize(istringstream& iss);
 
 public:
     CompleteBinaryTree();
     ~CompleteBinaryTree();
-
+    
     void print();
     string toString();
-    void insert(int value); // Функция добавления элемента
+    void insert(int value);
+    bool search(int value);
     bool isComplete();
-    bool search(int value); // Функция для поиска
-    size_t getSize() const { return size; } // Новый метод для получения размера
-    NodeT* getRoot() const { return root; } // Новый метод для получения корня
+    string serializeToText();
+    void deserialize(const string& data);
 };
 
 #include "../src/complete_binary_tree.cpp"

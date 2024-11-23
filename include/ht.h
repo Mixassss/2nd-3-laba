@@ -29,6 +29,10 @@ public:
     bool get(const string& key, string& value);
     bool remove(const string& key);
     int size() const;
+    void serializeToText(const string& filename);
+    void deserializeFromText(const string& filename);
+    void serializeToBinary(const string& filename);
+    void deserializeFromBinary(const string& filename);
 
     HNode** getTable() { return table; };
 };

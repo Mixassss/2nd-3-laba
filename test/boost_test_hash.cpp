@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(Hash_Test_NoVal) {
     Hash_table hash;
     string value;
 
-   BOOST_CHECK(!hash.get("mute", value));
+   BOOST_CHECK(!hash.get("stalker", value));
 
    cout << "Hash no value get test: " << timer.elapsed() << " seconds" << endl;
 }
@@ -108,4 +108,48 @@ BOOST_AUTO_TEST_CASE(Hash_Test_RemoveLastElement) {
     BOOST_CHECK(!hashs.get("key1", value)); // Проверка удаления
 
     cout << "Hash remove last element test: " << timer.elapsed() << " seconds" << endl;
+}
+
+BOOST_AUTO_TEST_CASE(Hash_Test_Serialize_Text) {
+    Timer timer;
+    timer.start();
+
+    Hash_table hash;
+    hash.insert("merz", "1");
+    hash.insert("bmw", "2");
+    string value;
+
+    hash.serializeToText("hash_table.txt"); // Сериализация в текстовый файл
+    
+    Hash_table new_hash; // Создание новой хеш-таблицы и десериализация из текстового файла
+    new_hash.deserializeFromText("hash_table.txt");
+
+    BOOST_CHECK(new_hash.get("merz", value)); // Проверяем, что данные были корректно десериализованы
+    BOOST_CHECK_EQUAL(value, "1");
+    BOOST_CHECK(new_hash.get("bmw", value));
+    BOOST_CHECK_EQUAL(value, "2");
+    
+    cout << "Hash table text serialize/deserialize test: " << timer.elapsed() << " seconds" << endl;
+}
+
+BOOST_AUTO_TEST_CASE(Hash_Test_Serialize_Binary) {
+    Timer timer;
+    timer.start();
+
+    Hash_table hash;
+    hash.insert("axe", "1");
+    hash.insert("kez", "2");
+    string value;
+
+    hash.serializeToBinary("hash_table.bin"); // Сериализация в бинарный файл
+    
+    Hash_table new_hash; // Создание новой хеш-таблицы и десериализация из бинарного файла
+    new_hash.deserializeFromBinary("hash_table.bin");
+
+    BOOST_CHECK(new_hash.get("axe", value)); // Проверяем, что данные были корректно десериализованы
+    BOOST_CHECK_EQUAL(value, "1");
+    BOOST_CHECK(new_hash.get("kez", value));
+    BOOST_CHECK_EQUAL(value, "2");
+
+    cout << "Hash table binary serialize/deserialize test: " << timer.elapsed() << " seconds" << endl;
 }
