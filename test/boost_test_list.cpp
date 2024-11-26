@@ -106,38 +106,6 @@ BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_Back) {
     cout << "Singly list push back test: " << timer.elapsed() << " seconds" << endl;
 }
 
-BOOST_AUTO_TEST_CASE(SinglyLinkedList_Serialization_Test) {
-    SinglyLinkedList sList;
-    Timer timer;
-    timer.start();
-
-    sList.pushFront("1");
-    sList.pushBack("2");
-    sList.pushBack("3");
-
-    // Сериализация в текстовый формат
-    sList.write_serialize("singly_list.txt");
-    SinglyLinkedList sListFromFile;
-    sListFromFile.deserialize("singly_list.txt");
-
-    BOOST_CHECK_EQUAL(sListFromFile.getSize(), sList.getSize());
-    BOOST_CHECK(sListFromFile.find("1"));
-    BOOST_CHECK(sListFromFile.find("2"));
-    BOOST_CHECK(sListFromFile.find("3"));
-
-    // Сериализация в бинарный формат
-    sList.serializeBinary("singly_list.bin");
-    SinglyLinkedList sListFromBinaryFile;
-    sListFromBinaryFile.deserializeBinary("singly_list.bin");
-
-    BOOST_CHECK_EQUAL(sListFromBinaryFile.getSize(), sList.getSize());
-    BOOST_CHECK(sListFromBinaryFile.find("1"));
-    BOOST_CHECK(sListFromBinaryFile.find("2"));
-    BOOST_CHECK(sListFromBinaryFile.find("3"));
-
-    cout << "Singly list serialize and deserialize test: " << timer.elapsed() << " seconds" << endl;
-}
-
 BOOST_AUTO_TEST_CASE(DoublyLinkedList_Test) {
     Timer timer;
     timer.start();
@@ -186,36 +154,4 @@ BOOST_AUTO_TEST_CASE(DoublyLinkedList_Test) {
     BOOST_CHECK_EQUAL(dList.getSize(), 0);
 
     cout << "Doubly list test: " << timer.elapsed() << " seconds" << endl;
-}
-
-BOOST_AUTO_TEST_CASE(DoublyLinkedList_Serialization_Test) {
-    SinglyLinkedList dList;
-    Timer timer;
-    timer.start();
-
-    dList.pushFront("1");
-    dList.pushBack("2");
-    dList.pushBack("3");
-
-    // Сериализация в текстовый формат
-    dList.write_serialize("singly_list.txt");
-    DoublyLinkedList dListFromFile;
-    dListFromFile.deserialize("singly_list.txt");
-
-    BOOST_CHECK_EQUAL(dListFromFile.getSize(), dList.getSize());
-    BOOST_CHECK(dListFromFile.find("1"));
-    BOOST_CHECK(dListFromFile.find("2"));
-    BOOST_CHECK(dListFromFile.find("3"));
-
-    // Сериализация в бинарный формат
-    dList.serializeBinary("singly_list.bin");
-    DoublyLinkedList dListFromBinaryFile;
-    dListFromBinaryFile.deserializeBinary("singly_list.bin");
-
-    BOOST_CHECK_EQUAL(dListFromBinaryFile.getSize(), dList.getSize());
-    BOOST_CHECK(dListFromBinaryFile.find("1"));
-    BOOST_CHECK(dListFromBinaryFile.find("2"));
-    BOOST_CHECK(dListFromBinaryFile.find("3"));
-
-    cout << "Doubly list serialize and deserialize test: " << timer.elapsed() << " seconds" << endl;
 }

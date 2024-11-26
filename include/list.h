@@ -31,10 +31,6 @@ public:
     size_t getSize() const;
     void clearSList();
     Node* getHead() const; // Добавлен метод getHead
-    void write_serialize(const string& filename);
-    void deserialize(const string& filename);
-    void serializeBinary(const string& filename);
-    void deserializeBinary(const string& filename);
 };
 
 
@@ -67,10 +63,7 @@ public:
     void print(); // Функция вывода списка
     size_t getSize() const;
     void clearDList();
-    void write_serialize(const string& filename);
-    void deserialize(const string& filename);
-    void serializeBinary(const string& filename);
-    void deserializeBinary(const string& filename);
+    DoubleNode* getHead() const; // Добавленный метод getHead
 };
 
 #include "../src/list.cpp"
