@@ -30,6 +30,8 @@ BOOST_AUTO_TEST_CASE(TestInsertTree) {
     BOOST_CHECK(Tree.search(9));
     BOOST_CHECK(!Tree.search(7));
 
+    Tree.clearTree();
+
     cout << "Tree insert test time: " << timer.elapsed() << " seconds" << endl;
 }
 
