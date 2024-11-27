@@ -106,6 +106,34 @@ BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_Back) {
     cout << "Singly list push back test: " << timer.elapsed() << " seconds" << endl;
 }
 
+BOOST_AUTO_TEST_CASE(SinglyLinkedList_Test_PopBack) {
+    Timer timer;
+    timer.start();
+    SinglyLinkedList sList;
+
+    BOOST_CHECK(sList.isEmpty());
+    BOOST_CHECK_EQUAL(sList.getSize(), 0);
+
+    sList.pushBack("4");
+    sList.pushBack("5");
+
+    BOOST_CHECK_EQUAL(sList.getSize(), 2);
+    
+    BOOST_CHECK(sList.find("4"));
+    BOOST_CHECK(sList.find("5"));
+    BOOST_CHECK(!sList.find("6"));
+
+    sList.popFront();
+    BOOST_CHECK_EQUAL(sList.getSize(), 1);
+    BOOST_CHECK(!sList.find("4"));
+
+    sList.popBack();
+    BOOST_CHECK_EQUAL(sList.getSize(), 0);
+    BOOST_CHECK(!sList.find("5"));
+
+    cout << "Singly list pop back test: " << timer.elapsed() << " seconds" << endl;
+}
+
 BOOST_AUTO_TEST_CASE(DoublyLinkedList_Test) {
     Timer timer;
     timer.start();
@@ -154,4 +182,47 @@ BOOST_AUTO_TEST_CASE(DoublyLinkedList_Test) {
     BOOST_CHECK_EQUAL(dList.getSize(), 0);
 
     cout << "Doubly list test: " << timer.elapsed() << " seconds" << endl;
+}
+
+BOOST_AUTO_TEST_CASE(DoublyLinkedList_PushTest) {
+    Timer timer;
+    timer.start();
+    DoublyLinkedList dList;
+
+    BOOST_CHECK(dList.isEmpty());
+    BOOST_CHECK_EQUAL(dList.getSize(), 0);
+
+    dList.pushBack("1");
+    dList.pushBack("2");
+    BOOST_CHECK_EQUAL(dList.getSize(), 2);
+
+    BOOST_CHECK(dList.find("1"));
+    BOOST_CHECK(dList.find("2"));
+    BOOST_CHECK(!dList.find("3"));
+
+    dList.pushFront("4");
+    dList.pushFront("5");
+    BOOST_CHECK_EQUAL(dList.getSize(), 4);
+
+    BOOST_CHECK(dList.find("4"));
+    BOOST_CHECK(dList.find("5"));
+    BOOST_CHECK(!dList.find("6"));
+
+    dList.popFront();
+    BOOST_CHECK_EQUAL(dList.getSize(), 3);
+    BOOST_CHECK(!dList.find("5"));
+
+    dList.popBack();
+    BOOST_CHECK_EQUAL(dList.getSize(), 2);
+    BOOST_CHECK(!dList.find("2"));
+
+    dList.removeAt("1");
+    BOOST_CHECK_EQUAL(dList.getSize(), 1);
+    BOOST_CHECK(!dList.find("1"));
+
+    dList.removeAt("4");
+    BOOST_CHECK_EQUAL(dList.getSize(), 0);
+    BOOST_CHECK(!dList.find("4"));
+
+    cout << "Doubly list test push back: " << timer.elapsed() << " seconds" << endl;
 }

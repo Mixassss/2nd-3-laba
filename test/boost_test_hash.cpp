@@ -63,9 +63,13 @@ BOOST_AUTO_TEST_CASE(Hash_Test_Koliz) {
 
     hash.insert("key1", "value1");
     hash.insert("key2", "value2");
+    hash.insert("key3", "value3");
+    hash.insert("key3", "value4");
     string value;
+    BOOST_CHECK(!hash.get("key4", value));
     BOOST_CHECK(hash.get("key1", value));
     BOOST_CHECK(hash.get("key2", value));
+    BOOST_CHECK(hash.get("key3", value));
 
     cout << "Hash kolizion test: " << timer.elapsed() << " seconds" << endl;
 }
