@@ -61,15 +61,11 @@ BOOST_AUTO_TEST_CASE(Hash_Test_Koliz) {
     timer.start();
     Hash_table hash;
 
-    hash.insert("key1", "value1");
-    hash.insert("key2", "value2");
-    hash.insert("key3", "value3");
-    hash.insert("key3", "value4");
+    hash.insert("654321", "1");
+    hash.insert("6543219", "2");
     string value;
-    BOOST_CHECK(!hash.get("key4", value));
-    BOOST_CHECK(hash.get("key1", value));
-    BOOST_CHECK(hash.get("key2", value));
-    BOOST_CHECK(hash.get("key3", value));
+    BOOST_CHECK(hash.get("654321", value));
+    BOOST_CHECK(hash.get("6543219", value));
 
     cout << "Hash kolizion test: " << timer.elapsed() << " seconds" << endl;
 }
@@ -82,6 +78,12 @@ BOOST_AUTO_TEST_CASE(Hash_Test_RemoveNonKey) {
     // Попытка удалить несуществующий ключ
     BOOST_CHECK(!hash.remove("spirit"));
     BOOST_CHECK_EQUAL(hash.size(), 0);
+
+    hash.insert("654321", "1");
+    hash.insert("6543219", "2");
+    hash.remove("6543219");
+    hash.insert("6543219", "2");
+    hash.remove("654321");
 
     cout << "Hash remove non key test: " << timer.elapsed() << " seconds" << endl;
 }
